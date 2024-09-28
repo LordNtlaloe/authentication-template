@@ -1,10 +1,11 @@
-import { auth, signIn, signOut } from '@/auth';
-import React, { use } from 'react';
+import { signIn } from '@/auth';
+import React from 'react';
 import UserButton from './UserButton';
+import getSession from '@/lib/getSession';
 
 
 export default async function Navbar() {
-    const session = await auth();
+    const session = await getSession();
     const user = session?.user;
     return (
         <div>
