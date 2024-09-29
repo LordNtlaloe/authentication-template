@@ -2,8 +2,8 @@ import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import prisma from "./lib/prisma"
 import Google from "next-auth/providers/google"
-import logo from '@/public/logo.png'
 import { Adapter } from "next-auth/adapters"
+import Resend from "next-auth/providers/resend"
  
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
@@ -18,6 +18,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }
   },
   providers: [
+    Resend({
+      from: "ntlal0e182@gmail.com"
+    }),
     Google
   ],
 })
