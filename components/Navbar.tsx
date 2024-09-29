@@ -1,18 +1,20 @@
-import { signIn } from '@/auth';
+"use client"
+import { signIn, useSession } from 'next-auth/react';
 import React from 'react';
 import UserButton from './UserButton';
-import getSession from '@/lib/getSession';
+import Image from 'next/image';
 
 
-export default async function Navbar() {
-    const session = await getSession();
-    const user = session?.user;
+export default function Navbar() {
+    const session = useSession();
+    const user = session.data?.user; 
+
     return (
         <div>
             <nav className="bg-white border-gray-200 dark:bg-gray-900">
                 <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                     <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-                        <img src="/logo.png" className="h-12 w-12" alt="Logo" />
+                        <Image width={50} height={50} src="/logo.png" className="h-12 w-12" alt="Logo" />
                         <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
                     </a>
                     <button data-collapse-toggle="navbar-default" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
@@ -39,7 +41,8 @@ export default async function Navbar() {
                                 <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Contact</a>
                             </li>
                             <li>
-                                {user ? <UserButton user={user} /> : <SignInButton />}
+                                {user && <UserButton user={user} /> }
+                                {!user && session.status !== "loading" && <SignInButton />}
                             </li>
                         </ul>
                     </div>
@@ -52,13 +55,6 @@ export default async function Navbar() {
 
 function SignInButton() {
     return (
-        <form
-            action={async () => {
-                "use server"
-                await signIn("google")
-            }}
-        >
-            <button type="submit">Sign In</button>
-        </form>
+        <button onClick={() => signIn()} type="submit">Sign In</button>
     )
-} 
+}
